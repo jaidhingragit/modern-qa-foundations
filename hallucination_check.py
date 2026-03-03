@@ -1,27 +1,23 @@
-# First QA Utility: Simple String Similarity Matcher
-# This mimics how we check if an AI's response matches a "Ground Truth" answer.
+import json
 
-def calculate_accuracy(expected, actual):
-    expected_words = set(expected.lower().split())
-    actual_words = set(actual.lower().split())
+def calculate_similarity(expected, actual):
+    # Lowercase and split into words
+    expected_set = set(expected.lower().replace('.', '').split())
+    actual_set = set(actual.lower().replace('.', '').split())
     
-    # Find how many words match
-    overlap = expected_words.intersection(actual_words)
-    score = (len(overlap) / len(expected_words)) * 100
-    return round(score, 2)
+    # Calculate Jaccard Similarity (a common Data Science metric)
+    intersection = expected_set.intersection(actual_set)
+    union = expected_set.union(actual_set)
+    return (len(intersection) / len(union)) * 100
 
-# TEST CASE
-ground_truth = "The capital of France is Paris."
-ai_response = "Paris is the capital city of France."
+# Load the data
+with open('test_cases.json', 'r') as f:
+    tests = json.load(f)
 
-accuracy = calculate_accuracy(ground_truth, ai_response)
+print(f"{'ID':<5} | {'Score':<10} | {'Status':<10}")
+print("-" * 30)
 
-print(f"--- AI Response Validation ---")
-print(f"Ground Truth: {ground_truth}")
-print(f"AI Response: {ai_response}")
-print(f"Accuracy Score: {accuracy}%")
-
-if accuracy > 80:
-    print("Result: PASS")
-else:
-    print("Result: FAIL - Potential Hallucination or Inaccuracy")
+for case in tests:
+    score = calculate_similarity(case['ground_truth'], case['ai_response'])
+    status = "PASS" if score > 50 else "FAIL (Low Similarity)"
+    print(f"{case['id']:<5} | {score:<10.2f}% | {status:<10}")

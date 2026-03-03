@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "input": "How do I reset my password?",
+        "ground_truth": "Go to settings, click security, and select reset password.",
+        "ai_response": "To change your password, navigate to the settings menu, find the security section, and choose the reset option."
+    },
+    {
+        "id": 2,
+        "input": "What is the refund policy?",
+        "ground_truth": "Refunds are processed within 7-10 business days.",
+        "ai_response": "You will get your money back in about a week or two."
+    }
+]
